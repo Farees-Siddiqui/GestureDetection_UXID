@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F9039E312C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9039E302C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift */; };
 		F9396E9B2C3885860085475F /* DataCollectionFinalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396E9A2C3885860085475F /* DataCollectionFinalApp.swift */; };
 		F9396E9D2C3885860085475F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396E9C2C3885860085475F /* ContentView.swift */; };
 		F9396E9F2C3885880085475F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F9396E9E2C3885880085475F /* Assets.xcassets */; };
@@ -22,6 +23,8 @@
 		F9396ED42C3885890085475F /* DataCollectionFinal_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396ED32C3885890085475F /* DataCollectionFinal_Watch_AppTests.swift */; };
 		F9396EDE2C3885890085475F /* DataCollectionFinal_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396EDD2C3885890085475F /* DataCollectionFinal_Watch_AppUITests.swift */; };
 		F9396EE02C3885890085475F /* DataCollectionFinal_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396EDF2C3885890085475F /* DataCollectionFinal_Watch_AppUITestsLaunchTests.swift */; };
+		F9396EF72C38862D0085475F /* CustomButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396EF62C38862D0085475F /* CustomButtonStyle.swift */; };
+		F9396EF92C3886430085475F /* CustomButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396EF82C3886430085475F /* CustomButtonStyle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +80,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F9039E302C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedRuntimeSessionManager.swift; sourceTree = "<group>"; };
+		F9039E322C409AEB00A8572D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F9039E332C409B0A00A8572D /* DataCollectionFinal-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "DataCollectionFinal-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		F9396E972C3885860085475F /* DataCollectionFinal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DataCollectionFinal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9396E9A2C3885860085475F /* DataCollectionFinalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCollectionFinalApp.swift; sourceTree = "<group>"; };
 		F9396E9C2C3885860085475F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -97,6 +103,8 @@
 		F9396ED92C3885890085475F /* DataCollectionFinal Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "DataCollectionFinal Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9396EDD2C3885890085475F /* DataCollectionFinal_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCollectionFinal_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		F9396EDF2C3885890085475F /* DataCollectionFinal_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCollectionFinal_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		F9396EF62C38862D0085475F /* CustomButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonStyle.swift; sourceTree = "<group>"; };
+		F9396EF82C3886430085475F /* CustomButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,10 +182,12 @@
 		F9396E992C3885860085475F /* DataCollectionFinal */ = {
 			isa = PBXGroup;
 			children = (
+				F9039E322C409AEB00A8572D /* Info.plist */,
 				F9396E9A2C3885860085475F /* DataCollectionFinalApp.swift */,
 				F9396E9C2C3885860085475F /* ContentView.swift */,
 				F9396E9E2C3885880085475F /* Assets.xcassets */,
 				F9396EA02C3885880085475F /* Preview Content */,
+				F9396EF62C38862D0085475F /* CustomButtonStyle.swift */,
 			);
 			path = DataCollectionFinal;
 			sourceTree = "<group>";
@@ -210,10 +220,13 @@
 		F9396EC12C3885880085475F /* DataCollectionFinal Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				F9039E332C409B0A00A8572D /* DataCollectionFinal-Watch-App-Info.plist */,
 				F9396EC22C3885880085475F /* DataCollectionFinalApp.swift */,
 				F9396EC42C3885880085475F /* ContentView.swift */,
 				F9396EC62C3885890085475F /* Assets.xcassets */,
 				F9396EC82C3885890085475F /* Preview Content */,
+				F9396EF82C3886430085475F /* CustomButtonStyle.swift */,
+				F9039E302C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift */,
 			);
 			path = "DataCollectionFinal Watch App";
 			sourceTree = "<group>";
@@ -465,6 +478,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9396EF72C38862D0085475F /* CustomButtonStyle.swift in Sources */,
 				F9396E9D2C3885860085475F /* ContentView.swift in Sources */,
 				F9396E9B2C3885860085475F /* DataCollectionFinalApp.swift in Sources */,
 			);
@@ -491,7 +505,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9396EF92C3886430085475F /* CustomButtonStyle.swift in Sources */,
 				F9396EC52C3885880085475F /* ContentView.swift in Sources */,
+				F9039E312C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift in Sources */,
 				F9396EC32C3885880085475F /* DataCollectionFinalApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -669,6 +685,7 @@
 				DEVELOPMENT_TEAM = BY349GZ6VY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "DataCollectionFinal-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = DataCollectionFinal;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = FareesSiddiqui.DataCollectionFinal;
@@ -699,6 +716,7 @@
 				DEVELOPMENT_TEAM = BY349GZ6VY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "DataCollectionFinal-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = DataCollectionFinal;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = FareesSiddiqui.DataCollectionFinal;
@@ -731,6 +749,7 @@
 				DEVELOPMENT_TEAM = BY349GZ6VY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DataCollectionFinal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = DataCollectionFinal;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -764,6 +783,7 @@
 				DEVELOPMENT_TEAM = BY349GZ6VY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DataCollectionFinal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = DataCollectionFinal;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
