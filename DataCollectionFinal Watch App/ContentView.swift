@@ -2,45 +2,65 @@ import SwiftUI
 import WatchConnectivity
 
 struct ContentView: View {
-    @State private var gridSize = 2
+    @State private var gridSize = 0 // Start with split layouts
     @State private var highlightedIndex: (Int, Int)? = nil
     @State private var iterationCount = 0
-    let maxIterations = 3 // Change this value to set the number of iterations before the grid size changes
+    let maxIterations = 3 // Number of iterations before layout changes
     @State private var isHomingSquareHighlighted = true
     @State private var isRandomSquareHighlighted = false
     @State private var isIterationActive = false
-    @State private var isRunning = false // Add this state variable
-    
+    @State private var isRunning = false
+
+    // Track how many times each square has been highlighted
+    @State private var highlightCounts: [[Int]] = []
+
     @StateObject private var connectivityManager = ConnectivityManager.shared
-    @StateObject private var sessionManager = ExtendedRuntimeSessionManager() // Add session manager
+    @StateObject private var sessionManager = ExtendedRuntimeSessionManager()
 
     // Timing values for easy tweaking
     let resetDuration: Double = 0.25
 
+    // Computed properties to calculate rows, columns, and button size based on gridSize
+    var layout: (rows: Int, columns: Int) {
+        switch gridSize {
+        case 0: // Horizontal split
+            return (1, 2)
+        case 1: // Vertical split
+            return (2, 1)
+        case 2: // 2x2 grid
+            return (2, 2)
+        case 3: // 3x3 grid
+            return (3, 3)
+        default:
+            return (2, 2)
+        }
+    }
+
     var body: some View {
         GeometryReader { geometry in
             let size = min(geometry.size.width, geometry.size.height)
-            let buttonSize = size / CGFloat(gridSize) * 0.9
-            let padding = size / CGFloat(gridSize) * 0.1 / 2
+            let rows = layout.rows
+            let columns = layout.columns
+            let buttonSize = size / CGFloat(max(rows, columns)) * 0.9
+            let padding = size / CGFloat(max(rows, columns)) * 0.1 / 2
 
             ZStack {
                 Color.white // Set background to white
                     .edgesIgnoringSafeArea(.all) // Ignore safe area to cover entire screen
 
                 VStack(spacing: padding) {
-                    ForEach(0..<gridSize, id: \.self) { row in
+                    ForEach(0..<rows, id: \.self) { row in
                         HStack(spacing: padding) {
-                            ForEach(0..<gridSize, id: \.self) { column in
+                            ForEach(0..<columns, id: \.self) { column in
                                 let isHighlighted = highlightedIndex != nil && highlightedIndex! == (row, column)
                                 Button(action: {
-                                    // Action for button tap
                                     handleTap()
                                 }) {
                                     Rectangle()
-                                        .foregroundColor(isHighlighted ? Color.green : .clear) // Highlight the square if it matches the pattern
+                                        .foregroundColor(isHighlighted ? Color.green : .clear)
                                         .frame(width: buttonSize, height: buttonSize)
-                                        .scaleEffect(isHighlighted ? 1.1 : 1.0) // Scale up if highlighted
-                                        .animation(.easeInOut(duration: 0.3), value: isHighlighted) // Animation
+                                        .scaleEffect(isHighlighted ? 1.1 : 1.0)
+                                        .animation(.easeInOut(duration: 0.3), value: isHighlighted)
                                 }
                                 .buttonStyle(CustomButtonStyle())
                             }
@@ -53,15 +73,15 @@ struct ContentView: View {
             .frame(width: geometry.size.width, height: geometry.size.height)
             .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
             .onAppear {
-                sessionManager.startSession() // Start session
+                sessionManager.startSession()
+                initializeHighlightCounts()
                 highlightHomingSquare()
             }
             .onDisappear {
-                sessionManager.invalidateSession() // Invalidate session
+                sessionManager.invalidateSession()
             }
             .onChange(of: connectivityManager.isRunning) { newValue in
                 isRunning = newValue
-                // Additional logic when isRunning changes
                 if isRunning {
                     startIteration()
                 } else {
@@ -71,8 +91,17 @@ struct ContentView: View {
         }
     }
 
+    func initializeHighlightCounts() {
+        // Initialize the highlight counts to track each square
+        highlightCounts = Array(repeating: Array(repeating: 0, count: layout.columns), count: layout.rows)
+    }
+
     func highlightHomingSquare() {
         switch gridSize {
+        case 0: // Horizontal split
+            highlightedIndex = (0, 0) // Highlight left side first
+        case 1: // Vertical split
+            highlightedIndex = (0, 0) // Highlight top side first
         case 2, 4:
             highlightedIndex = (0, 0) // First square for 2x2 and 4x4 grid
         case 3:
@@ -90,7 +119,6 @@ struct ContentView: View {
     }
 
     func startIteration() {
-        // User tapped to start iteration
         isHomingSquareHighlighted = false
         isIterationActive = true
         DispatchQueue.main.asyncAfter(deadline: .now() + resetDuration + 0.5) {
@@ -102,24 +130,27 @@ struct ContentView: View {
     }
 
     func stopIteration() {
-        // User tapped to end iteration
         isIterationActive = false
         isRandomSquareHighlighted = false
         highlightedIndex = nil
         iterationCount += 1
 
-        // Check if we've reached the maximum number of iterations
         if iterationCount >= maxIterations {
             iterationCount = 0
             DispatchQueue.main.asyncAfter(deadline: .now() + resetDuration) {
                 switch gridSize {
-                case 2:
-                    gridSize = 3
-                case 3:
-                    gridSize = 4
+                case 0: // Horizontal split
+                    gridSize = 1 // Move to vertical split
+                case 1: // Vertical split
+                    gridSize = 2 // Move to 2x2
+                case 2: // 2x2 grid
+                    gridSize = 3 // Move to 3x3
+                case 3: // 3x3 grid
+                    gridSize = 0 // Restart with horizontal split
                 default:
-                    gridSize = 2
+                    gridSize = 0
                 }
+                initializeHighlightCounts() // Reset counts when grid layout changes
                 highlightHomingSquare()
             }
         } else {
@@ -128,18 +159,41 @@ struct ContentView: View {
     }
 
     func highlightRandomSquare() {
-        let randomRow = Int.random(in: 0..<gridSize)
-        let randomColumn = Int.random(in: 0..<gridSize)
-        highlightedIndex = (randomRow, randomColumn)
+        // Find the square with the fewest highlights
+        var leastHighlightedSquares: [(Int, Int)] = []
+        var minHighlightCount = Int.max
+
+        for row in 0..<layout.rows {
+            for column in 0..<layout.columns {
+                let count = highlightCounts[row][column]
+                if count < minHighlightCount {
+                    leastHighlightedSquares = [(row, column)]
+                    minHighlightCount = count
+                } else if count == minHighlightCount {
+                    leastHighlightedSquares.append((row, column))
+                }
+            }
+        }
+
+        // Select a random square from the least highlighted squares
+        if let randomSquare = leastHighlightedSquares.randomElement() {
+            highlightedIndex = randomSquare
+            highlightCounts[randomSquare.0][randomSquare.1] += 1
+        }
+
         isRandomSquareHighlighted = true
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
+
+
+
 
 class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     static let shared = ConnectivityManager()
