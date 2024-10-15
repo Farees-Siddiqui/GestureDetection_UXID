@@ -6,9 +6,6 @@ struct ContentView: View {
     @State private var highlightedIndex: (Int, Int)? = nil
     @State private var iterationCount = 0
     let maxIterations = 3 // Number of iterations before layout changes
-    @State private var isHomingSquareHighlighted = true
-    @State private var isRandomSquareHighlighted = false
-    @State private var isIterationActive = false
     @State private var isRunning = false
 
     // Track how many times each square has been highlighted
@@ -18,7 +15,11 @@ struct ContentView: View {
     @StateObject private var sessionManager = ExtendedRuntimeSessionManager()
 
     // Timing values for easy tweaking
-    let resetDuration: Double = 0.25
+    let highlightDuration: Double = 0.5
+    let delayBetweenHighlights: Double = 0.25
+
+    // For managing pending tasks
+    @State private var pendingWorkItem: DispatchWorkItem?
 
     // Computed properties to calculate rows, columns, and button size based on gridSize
     var layout: (rows: Int, columns: Int) {
@@ -75,7 +76,7 @@ struct ContentView: View {
             .onAppear {
                 sessionManager.startSession()
                 initializeHighlightCounts()
-                highlightHomingSquare()
+                // No initial highlights
             }
             .onDisappear {
                 sessionManager.invalidateSession()
@@ -109,9 +110,6 @@ struct ContentView: View {
         default:
             highlightedIndex = nil
         }
-        isHomingSquareHighlighted = true
-        isRandomSquareHighlighted = false
-        isIterationActive = false
     }
 
     func handleTap() {
@@ -119,43 +117,64 @@ struct ContentView: View {
     }
 
     func startIteration() {
-        isHomingSquareHighlighted = false
-        isIterationActive = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + resetDuration + 0.5) {
-            highlightedIndex = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + resetDuration) {
-                highlightRandomSquare()
+        // Cancel any pending tasks
+        pendingWorkItem?.cancel()
+        pendingWorkItem = nil
+
+        // Start the sequence of highlighting
+        highlightHomingSquare()
+
+        // Schedule the sequence
+        let workItem = DispatchWorkItem {
+            // Remove homing square highlight
+            self.highlightedIndex = nil
+
+            // Delay before highlighting random square
+            DispatchQueue.main.asyncAfter(deadline: .now() + self.delayBetweenHighlights) {
+                // Highlight random square
+                self.highlightRandomSquare()
+
+                // The iteration now waits for the Stop button
             }
         }
+
+        pendingWorkItem = workItem
+
+        // Remove homing square highlight after duration
+        DispatchQueue.main.asyncAfter(deadline: .now() + self.highlightDuration, execute: workItem)
     }
 
     func stopIteration() {
-        isIterationActive = false
-        isRandomSquareHighlighted = false
+        // Cancel any pending tasks
+        pendingWorkItem?.cancel()
+        pendingWorkItem = nil
+
+        // Clear any highlights
         highlightedIndex = nil
+
+        // Increment iteration count
         iterationCount += 1
 
         if iterationCount >= maxIterations {
             iterationCount = 0
-            DispatchQueue.main.asyncAfter(deadline: .now() + resetDuration) {
-                switch gridSize {
-                case 0: // Horizontal split
-                    gridSize = 1 // Move to vertical split
-                case 1: // Vertical split
-                    gridSize = 2 // Move to 2x2
-                case 2: // 2x2 grid
-                    gridSize = 3 // Move to 3x3
-                case 3: // 3x3 grid
-                    gridSize = 0 // Restart with horizontal split
-                default:
-                    gridSize = 0
-                }
-                initializeHighlightCounts() // Reset counts when grid layout changes
-                highlightHomingSquare()
-            }
-        } else {
-            highlightHomingSquare()
+            advanceGridCondition()
         }
+    }
+
+    func advanceGridCondition() {
+        switch gridSize {
+        case 0:
+            gridSize = 1
+        case 1:
+            gridSize = 2
+        case 2:
+            gridSize = 3
+        case 3:
+            gridSize = 0
+        default:
+            gridSize = 0
+        }
+        initializeHighlightCounts()
     }
 
     func highlightRandomSquare() {
@@ -180,20 +199,14 @@ struct ContentView: View {
             highlightedIndex = randomSquare
             highlightCounts[randomSquare.0][randomSquare.1] += 1
         }
-
-        isRandomSquareHighlighted = true
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
-
-
-
 
 class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
     static let shared = ConnectivityManager()
@@ -223,7 +236,6 @@ class ConnectivityManager: NSObject, ObservableObject, WCSessionDelegate {
             DispatchQueue.main.async {
                 // Update the state based on the received message
                 self.isRunning = isRunning
-                // You can add additional logic here to handle the state change
                 print("Received message from iPhone: isRunning = \(isRunning)")
             }
         }
