@@ -1,5 +1,7 @@
 import SwiftUI
 import WatchConnectivity
+import CoreMotion
+import HealthKit
 
 struct ContentView: View {
     @State private var gridSize = 0 // Start with split layouts
@@ -7,12 +9,14 @@ struct ContentView: View {
     @State private var iterationCount = 0
     let maxIterations = 3 // Number of iterations before layout changes
     @State private var isRunning = false
+    @State private var isAnimating = false // Added for animation
 
     // Track how many times each square has been highlighted
     @State private var highlightCounts: [[Int]] = []
 
     @StateObject private var connectivityManager = ConnectivityManager.shared
     @StateObject private var sessionManager = ExtendedRuntimeSessionManager()
+    @StateObject private var dataCollector = DataCollector() // Added data collector
 
     // Timing values for easy tweaking
     let highlightDuration: Double = 0.5
@@ -39,15 +43,29 @@ struct ContentView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let size = min(geometry.size.width, geometry.size.height)
+            let width = geometry.size.width
+            let height = geometry.size.height
+            let size = min(width, height)
             let rows = layout.rows
             let columns = layout.columns
             let buttonSize = size / CGFloat(max(rows, columns)) * 0.9
             let padding = size / CGFloat(max(rows, columns)) * 0.1 / 2
 
             ZStack {
-                Color.white // Set background to white
-                    .edgesIgnoringSafeArea(.all) // Ignore safe area to cover entire screen
+                Color.white
+                    .edgesIgnoringSafeArea(.all)
+
+                // Spinning Square Animation
+                Rectangle()
+                    .fill(
+                        Color.white
+                    )
+                    .frame(width: size * 0.8, height: size * 0.8)
+                    .rotationEffect(Angle(degrees: isAnimating ? 360 : 0))
+                    .animation(Animation.linear(duration: 5).repeatForever(autoreverses: false), value: isAnimating)
+                    .onAppear {
+                        self.isAnimating = true
+                    }
 
                 VStack(spacing: padding) {
                     ForEach(0..<rows, id: \.self) { row in
@@ -71,24 +89,27 @@ struct ContentView: View {
                 .frame(width: size, height: size)
                 .padding(padding)
             }
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-            .onAppear {
-                sessionManager.startSession()
-                initializeHighlightCounts()
-                // No initial highlights
+            .frame(width: width, height: height)
+        }
+        .onAppear {
+            sessionManager.startSession()
+            initializeHighlightCounts()
+            // No initial highlights
+        }
+        .onDisappear {
+            sessionManager.invalidateSession()
+        }
+        .onChange(of: isRunning) { newValue in
+            if newValue {
+                startIteration()
+                dataCollector.startCollecting()
+            } else {
+                stopIteration()
+                dataCollector.stopCollecting()
             }
-            .onDisappear {
-                sessionManager.invalidateSession()
-            }
-            .onChange(of: connectivityManager.isRunning) { newValue in
-                isRunning = newValue
-                if isRunning {
-                    startIteration()
-                } else {
-                    stopIteration()
-                }
-            }
+        }
+        .onChange(of: connectivityManager.isRunning) { newValue in
+            isRunning = newValue
         }
     }
 
@@ -156,6 +177,11 @@ struct ContentView: View {
         iterationCount += 1
 
         if iterationCount >= maxIterations {
+            if gridSize == 3 {
+                // We've just completed maxIterations on gridSize == 3
+                // Save data
+                dataCollector.saveData()
+            }
             iterationCount = 0
             advanceGridCondition()
         }

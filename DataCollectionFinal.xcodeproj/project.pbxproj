@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		275ADDEE2CBEE67A00D48073 /* DataCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275ADDED2CBEE67A00D48073 /* DataCollector.swift */; };
 		F9039E312C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9039E302C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift */; };
 		F9396E9B2C3885860085475F /* DataCollectionFinalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396E9A2C3885860085475F /* DataCollectionFinalApp.swift */; };
 		F9396E9D2C3885860085475F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9396E9C2C3885860085475F /* ContentView.swift */; };
@@ -80,6 +81,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		275ADDED2CBEE67A00D48073 /* DataCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCollector.swift; sourceTree = "<group>"; };
+		275ADDEF2CBEE7D500D48073 /* DataCollectionFinal Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "DataCollectionFinal Watch App.entitlements"; sourceTree = "<group>"; };
+		275ADDF02CBEE7E500D48073 /* DataCollectionFinal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DataCollectionFinal.entitlements; sourceTree = "<group>"; };
 		F9039E302C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedRuntimeSessionManager.swift; sourceTree = "<group>"; };
 		F9039E322C409AEB00A8572D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F9039E332C409B0A00A8572D /* DataCollectionFinal-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "DataCollectionFinal-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -182,6 +186,7 @@
 		F9396E992C3885860085475F /* DataCollectionFinal */ = {
 			isa = PBXGroup;
 			children = (
+				275ADDF02CBEE7E500D48073 /* DataCollectionFinal.entitlements */,
 				F9039E322C409AEB00A8572D /* Info.plist */,
 				F9396E9A2C3885860085475F /* DataCollectionFinalApp.swift */,
 				F9396E9C2C3885860085475F /* ContentView.swift */,
@@ -220,6 +225,7 @@
 		F9396EC12C3885880085475F /* DataCollectionFinal Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				275ADDEF2CBEE7D500D48073 /* DataCollectionFinal Watch App.entitlements */,
 				F9039E332C409B0A00A8572D /* DataCollectionFinal-Watch-App-Info.plist */,
 				F9396EC22C3885880085475F /* DataCollectionFinalApp.swift */,
 				F9396EC42C3885880085475F /* ContentView.swift */,
@@ -227,6 +233,7 @@
 				F9396EC82C3885890085475F /* Preview Content */,
 				F9396EF82C3886430085475F /* CustomButtonStyle.swift */,
 				F9039E302C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift */,
+				275ADDED2CBEE67A00D48073 /* DataCollector.swift */,
 			);
 			path = "DataCollectionFinal Watch App";
 			sourceTree = "<group>";
@@ -509,6 +516,7 @@
 				F9396EC52C3885880085475F /* ContentView.swift in Sources */,
 				F9039E312C4093FB00A8572D /* ExtendedRuntimeSessionManager.swift in Sources */,
 				F9396EC32C3885880085475F /* DataCollectionFinalApp.swift in Sources */,
+				275ADDEE2CBEE67A00D48073 /* DataCollector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -679,6 +687,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "DataCollectionFinal Watch App/DataCollectionFinal Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DataCollectionFinal Watch App/Preview Content\"";
@@ -710,6 +719,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "DataCollectionFinal Watch App/DataCollectionFinal Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DataCollectionFinal Watch App/Preview Content\"";
@@ -743,6 +753,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DataCollectionFinal/DataCollectionFinal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DataCollectionFinal/Preview Content\"";
@@ -777,6 +788,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DataCollectionFinal/DataCollectionFinal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"DataCollectionFinal/Preview Content\"";
