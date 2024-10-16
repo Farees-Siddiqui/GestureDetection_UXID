@@ -177,11 +177,7 @@ struct ContentView: View {
         iterationCount += 1
 
         if iterationCount >= maxIterations {
-            if gridSize == 3 {
-                // We've just completed maxIterations on gridSize == 3
-                // Save data
-                dataCollector.saveData()
-            }
+            dataCollector.saveData(forGridSize: gridSize)
             iterationCount = 0
             advanceGridCondition()
         }
