@@ -6,6 +6,9 @@ class DataCollector: NSObject, ObservableObject {
     private let motionQueue = OperationQueue()
     private var data: [SensorData] = []
 
+    // Track the highlighted square gesture code
+    var highlightedGestureCode: String?
+
     override init() {
         super.init()
         motionManager.deviceMotionUpdateInterval = 1.0 / 50.0 // 50 Hz
@@ -23,7 +26,7 @@ class DataCollector: NSObject, ObservableObject {
         let csvString = dataToCSV()
         let fileName = "condition_\(gridSize).csv"
         saveCSV(csvString: csvString, fileName: fileName)
-        data.removeAll()
+        data.removeAll() // Clear data after saving
     }
 
     private func startMotionUpdates() {
@@ -31,9 +34,17 @@ class DataCollector: NSObject, ObservableObject {
             motionManager.startDeviceMotionUpdates(to: motionQueue) { [weak self] (deviceMotion, error) in
                 guard let self = self, let deviceMotion = deviceMotion else { return }
                 let timestamp = Date()
-                let sensorData = SensorData(timestamp: timestamp,
-                                            acceleration: deviceMotion.userAcceleration,
-                                            rotationRate: deviceMotion.rotationRate)
+
+                // Only use the highlighted gesture code
+                let gestureCode = self.highlightedGestureCode ?? "N/A" // Fallback to "N/A" if not set
+
+                // Capture the sensor data with the gesture code
+                let sensorData = SensorData(
+                    timestamp: timestamp,
+                    acceleration: deviceMotion.userAcceleration,
+                    rotationRate: deviceMotion.rotationRate,
+                    gestureCode: gestureCode
+                )
                 DispatchQueue.main.async {
                     self.data.append(sensorData)
                 }
@@ -46,7 +57,7 @@ class DataCollector: NSObject, ObservableObject {
     }
 
     private func dataToCSV() -> String {
-        var csvString = "Timestamp,AccelerationX,AccelerationY,AccelerationZ,RotationRateX,RotationRateY,RotationRateZ\n"
+        var csvString = "Timestamp,AccelerationX,AccelerationY,AccelerationZ,RotationRateX,RotationRateY,RotationRateZ,Gesture\n"
         let dateFormatter = ISO8601DateFormatter()
 
         for entry in data {
@@ -57,7 +68,10 @@ class DataCollector: NSObject, ObservableObject {
             let rotX = entry.rotationRate?.x ?? 0
             let rotY = entry.rotationRate?.y ?? 0
             let rotZ = entry.rotationRate?.z ?? 0
-            let line = "\(timestamp),\(accX),\(accY),\(accZ),\(rotX),\(rotY),\(rotZ)\n"
+
+            let gestureCode = entry.gestureCode ?? "N/A" // Ensure gesture code is not empty
+
+            let line = "\(timestamp),\(accX),\(accY),\(accZ),\(rotX),\(rotY),\(rotZ),\(gestureCode)\n"
             csvString += line
         }
         return csvString
@@ -82,4 +96,5 @@ struct SensorData {
     var timestamp: Date
     var acceleration: CMAcceleration?
     var rotationRate: CMRotationRate?
+    var gestureCode: String?
 }
